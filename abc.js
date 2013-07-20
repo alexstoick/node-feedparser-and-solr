@@ -23,6 +23,7 @@ request(url)
 	.on('error', function (error) {
 	console.error(error);
 	})
+	.on('complete', function () { requestFinished() ; } )
 	.pipe(new FeedParser())
 	.on('error', function (error) {
 		console.error(error);
@@ -36,7 +37,7 @@ request(url)
 
 			id ++ ;
 
-			console.log('Got article: %s', id.toString() ) ; //item.link ) ; //item.title || item.description);
+			// console.log('Got article: %s', id.toString() ) ; //item.link ) ; //item.title || item.description);
 
 			key = "id" + id.toString() ;
 
@@ -46,8 +47,16 @@ request(url)
 
 			// client.sadd ( title , key ) ;
 		}
-	});
+	})
+	.on('end' , requestFinished );
+
+
+function requestFinished()
+{
+	end = new Date() ;
+
+	console.log ( "It all took from completed:" + (end - start) ) ;
+}
 
 end = new Date() ;
-
 console.log ( "It all took:" + (end - start) ) ;
