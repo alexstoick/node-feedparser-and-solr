@@ -5,13 +5,15 @@ HOST = '192.168.1.103' ;
 var redis = require ( 'node-redis' ) ,
 	client = redis.createClient ( PORT , HOST ) ;
 
-var Parser = require('./parser') ;
+var Parser = require ( './parser' ) ;
 
-var p = new Parser() ;
+p = new Parser () ;
 
-uat.on ( 'endParse' , function () { console.log ( 'not bad' ) ; } ) ;
-var uat = p.request ( url ) ;
+url = 'http://www.hotnews.ro/rss/'
 
+p.request ( url )
+ .on ( 'endParse' , function () { console.log ( p.start ) ; } ) ;
 
+url = 'http://jurnalul.ro/rss/sport.xml'
 
-
+ p.request ( url );

@@ -11,6 +11,7 @@ module.exports = Parser;
 
 function Parser () {
 	events.EventEmitter.call(this);
+	this.start = 0 ;
 }
 
 // inherit events.EventEmitter
@@ -25,6 +26,8 @@ Parser.prototype = Object.create(events.EventEmitter.prototype, {
 Parser.prototype.request = function ( url )
 {
 	var self = this ;
+	self.articole = [] ;
+	//self.start = 0 ;
 	self.startDate = new Date() ;
 
 	request(url)
@@ -37,23 +40,23 @@ Parser.prototype.request = function ( url )
 			console.error(error);
 		})
 		.on('meta', function (meta) {
+			self.title = meta.title ;
 			console.log('===== %s =====', meta.title);
 		})
 		.on('readable', function() {
 			var stream = this, item;
 			while (item = stream.read()) {
 
-				this.id ++ ;
+				var articol = {
+						id: self.start ,
+						content : item.description ,
+						title : item.title ,
+						url : item.link
+					}
 
-				// console.log('Got article: %s', id.toString() ) ; //item.link ) ; //item.title || item.description);
+				self.articole.push ( articol ) ;
+				self.start ++ ;
 
-				//key = "id" + id.toString() ;
-
-				// client.hmset ( key , 'url' , item.link ) ;
-				// client.hmset ( key , 'title' , item.title ) ;
-				// client.hmset ( key , 'description' , item.description ) ;
-
-				// client.sadd ( title , key ) ;
 			}
 		})
 		.on('end' , function () { self.emmitRequestFinished(self) } );
@@ -61,17 +64,10 @@ Parser.prototype.request = function ( url )
 		return self;
 }
 
-
 Parser.prototype.emmitRequestFinished = function ( parent )
 {
 	var self = parent ;
 	self.emit ( 'endParse' ) ;
-	self.requestFinished();
-}
-
-Parser.prototype.requestFinished = function ()
-{
-	var self = this ;
 	self.end = new Date() ;
 
 	console.log ( "Duration: "  + (self.end - self.startDate) ) ;
