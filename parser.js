@@ -5,11 +5,27 @@ title = 'hotnews' ;
 
 var FeedParser = require('FeedParser') ,
 	request = require ( 'request') ;
+var events = require('events') ;
+
+module.exports = Parser;
+
+function Parser () {
+	events.EventEmitter.call(this);
+}
+
+// inherit events.EventEmitter
+Parser.super_ = events.EventEmitter;
+Parser.prototype = Object.create(events.EventEmitter.prototype, {
+	constructor: {
+		value: Parser,
+		enumerable: false
+	}
+});
 
 Parser.prototype.request = function ( url )
 {
 	var self = this ;
-	var self.startDate = new Date() ;
+	self.startDate = new Date() ;
 
 	request(url)
 		.on('error', function (error) {
@@ -40,15 +56,15 @@ Parser.prototype.request = function ( url )
 				// client.sadd ( title , key ) ;
 			}
 		})
-		.on('end' , self.emmitRequestFinished );
+		.on('end' , function () { self.emmitRequestFinished(self) } );
 
 		return self;
 }
 
 
-Parser.prototype.emmitRequestFinished = function ( )
+Parser.prototype.emmitRequestFinished = function ( parent )
 {
-	var self = this ;
+	var self = parent ;
 	self.emit ( 'endParse' ) ;
 	self.requestFinished();
 }
@@ -56,7 +72,7 @@ Parser.prototype.emmitRequestFinished = function ( )
 Parser.prototype.requestFinished = function ()
 {
 	var self = this ;
-	var self.end = new Date() ;
+	self.end = new Date() ;
 
-	console.log ( "It all took from completed:" + (self.end - self.startDate) ) ;
+	console.log ( "Duration: "  + (self.end - self.startDate) ) ;
 }
