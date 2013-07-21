@@ -35,11 +35,8 @@ function procesareObiect ( err , obj )
 	// 1 - url
 	// 2 - title
 	++start ;
-//	console.log ( obj[0].toString() ) ;
 	description = obj[0].toString() ;
-//	console.log ( obj[1].toString() ) ;
 	url = obj[1].toString() ;
-//	console.log ( obj[2].toString() ) ;
 	title = obj[2].toString() ;
 
 	var articol = {
@@ -50,13 +47,11 @@ function procesareObiect ( err , obj )
 	}
 
 	articole.push ( articol ) ;
-	//console.log ( articole.length ) ;
 	if ( articole.length == total )
 	{
 		console.log ( 'win' ) ;
 		addToSolr();
 	}
-
 }
 
 function addToSolr ( )
