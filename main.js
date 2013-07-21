@@ -1,8 +1,3 @@
-/*!
- * node-feedparser
- * Copyright(c) 2013 Dan MacTough <danmactough@gmail.com>
- * MIT Licensed
- */
 
 url = 'http://www.hotnews.ro/rss/'
 title = 'hotnews' ;
