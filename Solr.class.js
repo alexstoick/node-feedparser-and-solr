@@ -25,7 +25,7 @@ Solr.prototype = Object.create(events.EventEmitter.prototype, {
 Solr.prototype.createClient = function () {
 
 	var self = this ;
-	this.client = solr_lib.createClient ( self.HOST , self.PORT_SOLR ) ;
+	self.client = solr_lib.createClient ( self.HOST , self.PORT_SOLR ) ;
 
 }
 
@@ -42,13 +42,12 @@ Solr.prototype.add = function ( object ) {
 
 Solr.prototype.addCompleted = function ( error , response ) {
 
-	var self = this ;
-
 	if ( error )
 		console.log ( error ) ;
 	else
 	{
-		self.emmit ( 'solrAddCompleted' ) ;
+		//Solr.emit ( 'solrAddCompleted' ) ;
+		console.log ( response ) ;
 		console.log ( 'Objects added to solr successfully' ) ;
 	}
 
@@ -70,7 +69,7 @@ Solr.prototype.wipeCompleted = function ( error , response ) {
 	else
 	{
 		console.log ( 'Wiped data from Solr successfully' ) ;
-		self.emmit ( 'wipeCompleted' ) ;
+		//self.emit ( 'wipeCompleted' ) ;
 	}
 
 }

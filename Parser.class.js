@@ -12,6 +12,7 @@ module.exports = Parser;
 function Parser () {
 	events.EventEmitter.call(this);
 	this.start = 0 ;
+	this.articole = [] ;
 }
 
 // inherit events.EventEmitter
@@ -26,7 +27,6 @@ Parser.prototype = Object.create(events.EventEmitter.prototype, {
 Parser.prototype.request = function ( url )
 {
 	var self = this ;
-	self.articole = [] ;
 	//self.start = 0 ;
 	self.startDate = new Date() ;
 
