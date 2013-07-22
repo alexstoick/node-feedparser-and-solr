@@ -8,6 +8,7 @@ console.log ( 'Listening on port 3000' ) ;
 app.get ( '/' , function ( req , res) {
 
 	console.log ( req.query.url ) ;
+	res.send ( 'request ok') ;
 
 });
 

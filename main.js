@@ -5,7 +5,7 @@ HOST = '192.168.1.103' ;
 var redis = require ( 'node-redis' ) ,
 	client = redis.createClient ( PORT , HOST ) ;
 
-var Parser = require ( './parser' ) ;
+var Parser = require ( './parser.class' ) ;
 
 p = new Parser () ;
 

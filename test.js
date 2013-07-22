@@ -1,8 +1,7 @@
-var Parser = require ( './parser' ) ;
+var Solr = require ( './solr.class' ) ;
 
-p = new Parser () ;
+o = new Solr() ;
 
-url = 'http://www.hotnews.ro/rss/'
+o.createClient () ;
 
-p.request ( url )
- .on ( 'endParse' , function () { console.log ( 'not bad' ) ; } ) ;
+console.log (o.client.ping () ) ;
