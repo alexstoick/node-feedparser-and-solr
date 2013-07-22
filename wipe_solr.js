@@ -13,6 +13,6 @@ solrClient.delete('id','*',function(err,obj){
    if(err){
    	console.log(err);
    }else{
-   	console.log(obj);	
+   	console.log(obj);
    }
-}); 
+});

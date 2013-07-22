@@ -26,7 +26,7 @@ Solr.prototype.createClient = function () {
 
 	var self = this ;
 	self.client = solr_lib.createClient ( self.HOST , self.PORT_SOLR ) ;
-
+	console.log ( 'created client' ) ;
 }
 
 Solr.prototype.add = function ( object ) {
@@ -47,7 +47,7 @@ Solr.prototype.addCompleted = function ( error , response ) {
 	else
 	{
 		//Solr.emit ( 'solrAddCompleted' ) ;
-		console.log ( response ) ;
+		//console.log ( response ) ;
 		console.log ( 'Objects added to solr successfully' ) ;
 	}
 

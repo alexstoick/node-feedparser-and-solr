@@ -5,24 +5,25 @@
 // var redis = require ( 'node-redis' ) ,
 // 	client = redis.createClient ( PORT , HOST ) ;
 
+var Solr = require ( './solr.class' ) ;
+c = new Solr() ;
+c.createClient();
+
 var Parser = require ( './parser.class' ) ;
 
 p = new Parser () ;
-p.on ( 'endParse' , function () { console.log ( 'Number of articles: ' + p.articole.length ) ; } ) ;
+p.on ( 'endParse' , parseEnded ) ;//function () { console.log ( 'Number of articles: ' + p.articole.length ) ; } ) ;
 
 url = 'http://www.hotnews.ro/rss/'
 p.request ( url ) ;
 
 
-var Solr = require ( './solr.class' ) ;
-
-c = new Solr() ;
-
-c.createClient();
-
-c.wipe();
-c.on ( 'solrAddCompleted' , function () { console.log ( 'uat' ) ; } ) ;
-//c.add ( p.articole ) ;
+function parseEnded ()
+{
+//	c.on ( 'solrAddCompleted' , function () { console.log ( 'uat' ) ; } ) ;
+	console.log ( p.articole.length ) ;
+	c.add ( p.articole ) ;
+}
 
 // url = 'http://jurnalul.ro/rss/sport.xml'
 // p.request ( url );
