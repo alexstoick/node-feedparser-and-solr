@@ -49,12 +49,13 @@ Parser.prototype.request = function ( url )
 
 				var articol = {
 						id: self.start ,
-						content : item.description ,
+						description : item.description , //content for SOLR
 						title : item.title ,
 						url : item.link
 					}
 
 				self.articole.push ( articol ) ;
+				self.emit ( 'newArticle' , item.link , item.title , item.description ) ;
 				self.start ++ ;
 
 			}
