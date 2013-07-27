@@ -42,11 +42,10 @@ mysql_query = 'INSERT INTO articles SET ?' ;
 
 parserURL = 'http://localhost:4567/?url=' ;
 
-parser.on ( 'endParse' , parseEnded ) ;//function () { console.log ( 'Number of articles: ' + parser.articole.length ) ; } ) ;
 parser.on ( 'newArticle' , newArticle ) ;
 
-//url = 'http://www.hotnews.ro/rss/'
-url = 'http://localhost/test.xml'
+url = 'http://www.hotnews.ro/rss/'
+//url = 'http://localhost/test.xml'
 parser.request ( url ) ;
 
 
@@ -63,8 +62,12 @@ function newArticle ( url , title , description )
 
 			//get parserizer
 
-			url = 'http://sport.hotnews.ro/stiri-fotbal-15206485-tas-rapid-ramane-liga-1-cererea-concordiei-fost-respinsa.htm' ;
-			request.get ( parserURL + url , function ( err , response, body ) { addToSolrAndMySQL ( url , title , description , body ) ; } ) ;
+			//url = 'http://sport.hotnews.ro/stiri-fotbal-15206485-tas-rapid-ramane-liga-1-cererea-concordiei-fost-respinsa.htm' ;
+			request.get ( parserURL + url , function ( err , response, body ) { 
+				console.log ( 'Request completed' ) ;
+				addToSolrAndMySQL ( url , title , description , body ) ; 
+			}) ;
+
 
 		}
 		else
@@ -86,16 +89,12 @@ function addToSolrAndMySQL ( url , title , description , response )
 	mysql_set =  { url: url , title: title , text: text , description: description , created_at: date , updated_at: date } ;
 	solr_set  =  { url: url , title: title , content: text , description: description }
 
-	mysql.query ( mysql_query , mysql_set , function ( err , res) { solr_set["id"] = res.insertId ; solr.add ( solr_set ) ; } ) ;
+	mysql.query ( mysql_query , mysql_set , function ( err , res) { 
+		solr_set["id"] = res.insertId ;
+		redis.set ( url , res.insertId ) ;
+		solr.add ( solr_set ) ; 
+	}) ;
 
-}
-
-
-function parseEnded ()
-{
-//	c.on ( 'solrAddCompleted' , function () { console.log ( 'uat' ) ; } ) ;
-//	console.log ( parser.articole.length ) ;
-//	c.add ( parser.articole ) ;
 }
 
 // url = 'http://jurnalul.ro/rss/sport.xml'
