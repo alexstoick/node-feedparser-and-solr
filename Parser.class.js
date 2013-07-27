@@ -48,7 +48,6 @@ Parser.prototype.request = function ( url )
 			while (item = stream.read()) {
 
 				var articol = {
-						id: self.start ,
 						description : item.description , //content for SOLR
 						title : item.title ,
 						url : item.link

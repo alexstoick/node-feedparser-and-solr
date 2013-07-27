@@ -36,7 +36,7 @@ mysql.connect( function (err ) {
 
 
 var date = new Date();
-query = 'INSERT INTO articles SET ?' ;
+mysql_query = 'INSERT INTO articles SET ?' ;
 
 
 
@@ -54,8 +54,6 @@ parser.request ( url ) ;
 
 function newArticle ( url , title , description )
 {
-	set =  { url: url , title: title , text: 'uat uat' , description: description , created_at: date , updated_at: date } ;
-
 	redis.exists ( url , function ( err , res) {
 
 		if ( res == 0 )
@@ -66,7 +64,7 @@ function newArticle ( url , title , description )
 			//get parserizer
 
 			url = 'http://sport.hotnews.ro/stiri-fotbal-15206485-tas-rapid-ramane-liga-1-cererea-concordiei-fost-respinsa.htm' ;
-			request.get ( parserURL + url , function ( err , response, body ) { console.log ( err + " " + response + " " + body ) ; } ) ;
+			request.get ( parserURL + url , function ( err , response, body ) { addToSolrAndMySQL ( url , title , description , body ) ; } ) ;
 
 		}
 		else
@@ -76,25 +74,22 @@ function newArticle ( url , title , description )
 
 	} ) ;
 
-	//connection.query ( query , set ) ; // function ( err , result ) { console.log ( result) ; })
 }
 
 
-function processRedisResponse ( err , res )
+function addToSolrAndMySQL ( url , title , description , response )
 {
-	if ( res == 0 )
-	{
-		//key does not exist
-		console.log ( 'Key does not exist' ) ;
 
-		redis.set ( )
+	parsed = JSON.parse ( response ) ;
+	text = parsed ["response"] ;
 
-	}
-	else
-	{
-		console.log ( 'Key exists. Skipping ... ' ) ;
-	}
+	mysql_set =  { url: url , title: title , text: text , description: description , created_at: date , updated_at: date } ;
+	solr_set  =  { url: url , title: title , content: text , description: description }
+
+	mysql.query ( mysql_query , mysql_set , function ( err , res) { solr_set["id"] = res.insertId ; solr.add ( solr_set ) ; } ) ;
+
 }
+
 
 function parseEnded ()
 {

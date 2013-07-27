@@ -7,7 +7,7 @@ module.exports = Solr ;
 
 function Solr() {
 	events.EventEmitter.call(this);
-	this.HOST = '127.0.0.1' ;
+	this.HOST = '192.168.1.102' ; //'127.0.0.1'
 	this.PORT_SOLR = 8983 ;
 	this.client = null ;
 }
@@ -48,7 +48,7 @@ Solr.prototype.addCompleted = function ( error , response ) {
 	{
 		//Solr.emit ( 'solrAddCompleted' ) ;
 		//console.log ( response ) ;
-		console.log ( 'Objects added to solr successfully' ) ;
+		console.log ( 'Added to SOLR successfully' ) ;
 	}
 
 }
