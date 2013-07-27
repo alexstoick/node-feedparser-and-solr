@@ -9,6 +9,7 @@
 4) If !3 => 5
 
 5) Call Parserizer for the URL
+	localhost:4567/?url=
 
 6) When data comes back add to SOLR and MySQL
 

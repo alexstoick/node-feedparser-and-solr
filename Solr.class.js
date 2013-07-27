@@ -26,7 +26,7 @@ Solr.prototype.createClient = function () {
 
 	var self = this ;
 	self.client = solr_lib.createClient ( self.HOST , self.PORT_SOLR ) ;
-	console.log ( 'created client' ) ;
+	console.log ( 'Created SOLR client' ) ;
 }
 
 Solr.prototype.add = function ( object ) {
