@@ -38,14 +38,13 @@ mysql.connect( function (err ) {
 var date = new Date();
 mysql_query = 'INSERT INTO articles SET ?' ;
 
-
-
 parserURL = 'http://localhost:4567/?url=' ;
 
 parser.on ( 'newArticle' , newArticle ) ;
+parser.on ( 'endParse' , function () { console.log ( "Finished parsing" ) ; }) ;
 
 url = 'http://www.hotnews.ro/rss/'
-//url = 'http://localhost/test.xml'
+
 parser.request ( url ) ;
 
 
@@ -62,7 +61,6 @@ function newArticle ( url , title , description )
 
 			//get parserizer
 
-			//url = 'http://sport.hotnews.ro/stiri-fotbal-15206485-tas-rapid-ramane-liga-1-cererea-concordiei-fost-respinsa.htm' ;
 			request.get ( parserURL + url , function ( err , response, body ) { 
 				console.log ( 'Request completed' ) ;
 				addToSolrAndMySQL ( url , title , description , body ) ; 
@@ -78,7 +76,6 @@ function newArticle ( url , title , description )
 	} ) ;
 
 }
-
 
 function addToSolrAndMySQL ( url , title , description , response )
 {
@@ -96,16 +93,3 @@ function addToSolrAndMySQL ( url , title , description , response )
 	}) ;
 
 }
-
-// url = 'http://jurnalul.ro/rss/sport.xml'
-// parser.request ( url );
-
-// url = 'http://www.hotnews.ro/rss/economie'
-// parser.request ( url ) ;
-
-// url = 'http://www.hotnews.ro/rss/sport'
-// parser.request ( url ) ;
-
-// url = 'http://jurnalul.ro/rss/bani-afaceri.xml'
-// parser.request ( url ) ;
-
