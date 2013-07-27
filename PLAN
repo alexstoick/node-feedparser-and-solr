@@ -1,0 +1,14 @@
+
+
+1) get article
+
+2) check in Redis if it is already stored
+
+3) If 3 -> then do nothing
+
+4) If !3 => 5
+
+5) Call Parserizer for the URL
+
+6) When data comes back add to SOLR and MySQL
+
