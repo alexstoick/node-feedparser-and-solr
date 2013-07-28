@@ -1,7 +1,4 @@
 
-url = 'http://www.hotnews.ro/rss/'
-title = 'hotnews' ;
-
 
 var FeedParser = require('FeedParser') ,
 	request = require ( 'request') ;

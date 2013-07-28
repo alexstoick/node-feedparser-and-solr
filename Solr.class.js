@@ -7,7 +7,7 @@ module.exports = Solr ;
 
 function Solr() {
 	events.EventEmitter.call(this);
-	this.HOST = '192.168.1.102' ; //'127.0.0.1'
+	this.HOST = '192.168.1.103' ; //'127.0.0.1'
 	this.PORT_SOLR = 8983 ;
 	this.client = null ;
 }

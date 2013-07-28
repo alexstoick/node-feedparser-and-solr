@@ -1,10 +1,10 @@
 var mysql = require ( 'mysql' ) ;
 
 var connection = mysql.createConnection ({
-	host: 'localhost',
+	host: '192.168.1.103',
 	user : 'root',
 	passsword: '',
-	database: 'stiriapi'
+	database: 'stiriAPI'
 }) ;
 
 connection.connect( function (err ) {
@@ -14,8 +14,8 @@ connection.connect( function (err ) {
 		console.log ( 'Connected to MySQL')
 } ) ;
 
-var date = new Date();
-query = 'INSERT INTO articles SET ?' ;
-set =  { url: 'abcurl' , title:'dayum_title' , text: 'uat' , description:'short summary' , created_at: date , updated_at: date } ;
+// var date = new Date();
+// query = 'INSERT INTO articles SET ?' ;
+// set =  { url: 'abcurl' , title:'dayum_title' , text: 'uat' , description:'short summary' , created_at: date , updated_at: date } ;
 
-connection.query ( query , set , function ( err , result ) { console.log ( result) ; })
+// connection.query ( query , set , function ( err , result ) { console.log ( result) ; })

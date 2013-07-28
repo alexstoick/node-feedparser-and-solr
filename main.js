@@ -1,6 +1,6 @@
 
 PORT = 6379 ;
-HOST = '192.168.1.102' ;
+HOST = '192.168.1.103' ;
 
 var redis_lib = require ( 'node-redis' ) ;
 var mysql_lib = require ( 'mysql' ) ;
@@ -15,7 +15,7 @@ var mysql = mysql_lib.createConnection ({
 	host: 'localhost',
 	user : 'root',
 	passsword: '',
-	database: 'stiriapi'
+	database: 'stiriAPI'
 }) ;
 
 
@@ -34,16 +34,19 @@ mysql.connect( function (err ) {
 } ) ;
 
 
-
 var date = new Date();
 mysql_query = 'INSERT INTO articles SET ?' ;
 
-parserURL = 'http://localhost:4567/?url=' ;
+//parserURL = 'http://localhost:4567/?url=' ;
+parserURL = 'http://192.168.1.103:8080/?url=' ;
 
 parser.on ( 'newArticle' , newArticle ) ;
 parser.on ( 'endParse' , function () { console.log ( "Finished parsing" ) ; }) ;
 
-url = 'http://www.hotnews.ro/rss/'
+//url = 'http://jurnalul.ro/rss/sport.xml'
+url = 'http://jurnalul.ro/rss' ;
+//url = 'http://www.hotnews.ro/rss/economie' ;
+//url = 'http://www.hotnews.ro/rss/'
 
 parser.request ( url ) ;
 
@@ -61,9 +64,9 @@ function newArticle ( url , title , description )
 
 			//get parserizer
 
-			request.get ( parserURL + url , function ( err , response, body ) { 
+			request.get ( parserURL + url , function ( err , response, body ) {
 				console.log ( 'Request completed' ) ;
-				addToSolrAndMySQL ( url , title , description , body ) ; 
+				addToSolrAndMySQL ( url , title , description , body ) ;
 			}) ;
 
 
@@ -74,22 +77,19 @@ function newArticle ( url , title , description )
 		}
 
 	} ) ;
-
 }
 
 function addToSolrAndMySQL ( url , title , description , response )
 {
-
 	parsed = JSON.parse ( response ) ;
 	text = parsed ["response"] ;
 
 	mysql_set =  { url: url , title: title , text: text , description: description , created_at: date , updated_at: date } ;
 	solr_set  =  { url: url , title: title , content: text , description: description }
 
-	mysql.query ( mysql_query , mysql_set , function ( err , res) { 
+	mysql.query ( mysql_query , mysql_set , function ( err , res) {
 		solr_set["id"] = res.insertId ;
 		redis.set ( url , res.insertId ) ;
-		solr.add ( solr_set ) ; 
+		solr.add ( solr_set ) ;
 	}) ;
-
 }
