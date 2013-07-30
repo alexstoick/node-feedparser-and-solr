@@ -6,8 +6,9 @@ var events = require('events') ;
 
 module.exports = Parser;
 
-function Parser () {
+function Parser ( current_instance ) {
 	events.EventEmitter.call(this);
+	this.current_instance = current_instance ;
 	this.start = 0 ;
 	this.articole = [] ;
 }
@@ -37,7 +38,6 @@ Parser.prototype.request = function ( url )
 			console.error(error);
 		})
 		.on('meta', function (meta) {
-			self.title = meta.title ;
 			console.log('===== %s =====', meta.title);
 		})
 		.on('readable', function() {
@@ -51,7 +51,7 @@ Parser.prototype.request = function ( url )
 					}
 
 				self.articole.push ( articol ) ;
-				self.emit ( 'newArticle' , item.link , item.title , item.description ) ;
+				self.emit ( 'newArticle' , item.link , item.title , item.description , this.current_instance ) ;
 				self.start ++ ;
 
 			}

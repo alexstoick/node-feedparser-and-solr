@@ -1,7 +1,13 @@
-var Solr = require ( './solr.class' ) ;
+var Main_lib = require ( './main.class' ) ;
+var sleep = require ('sleep') ;
 
-o = new Solr() ;
+var main = new Main_lib ( ) ;
 
-o.createClient () ;
+url = 'http://www.hotnews.ro/rss/'
 
-console.log (o.client.ping () ) ;
+setTimeout ( apelDelayed , 100 ) ;
+
+function apelDelayed ()
+{
+	main.makeRequest ( url ) ;
+}

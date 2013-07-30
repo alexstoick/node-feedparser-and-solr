@@ -2,7 +2,7 @@
 var solr = require ('solr-client');
 
 PORT_SOLR = 8983 ;
-HOST = '192.168.1.102' ;
+HOST = '192.168.1.103' ;
 
 var solrClient = solr.createClient ( HOST  , PORT_SOLR ) ;
 

@@ -12,7 +12,7 @@ var parser = new Parser_lib () ;
 var	redis = redis_lib.createClient ( PORT , HOST ) ;
 var solr = new Solr_lib() ;
 var mysql = mysql_lib.createConnection ({
-	host: 'localhost',
+	host: '192.168.1.103',
 	user : 'root',
 	passsword: '',
 	database: 'stiriAPI'
@@ -37,17 +37,12 @@ mysql.connect( function (err ) {
 var date = new Date();
 mysql_query = 'INSERT INTO articles SET ?' ;
 
-//parserURL = 'http://localhost:4567/?url=' ;
 parserURL = 'http://192.168.1.103:8080/?url=' ;
 
 parser.on ( 'newArticle' , newArticle ) ;
 parser.on ( 'endParse' , function () { console.log ( "Finished parsing" ) ; }) ;
 
-//url = 'http://jurnalul.ro/rss/sport.xml'
-url = 'http://jurnalul.ro/rss' ;
-//url = 'http://www.hotnews.ro/rss/economie' ;
-//url = 'http://www.hotnews.ro/rss/'
-
+url = 'http://www.hotnews.ro/rss/'
 parser.request ( url ) ;
 
 
