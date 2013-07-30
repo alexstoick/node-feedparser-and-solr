@@ -5,9 +5,25 @@ var main = new Main_lib ( ) ;
 
 url = 'http://www.hotnews.ro/rss/'
 
-setTimeout ( apelDelayed , 100 ) ;
+var links = [
+				{"url": "http://www.hotnews.ro/rss/sport"},
+				{"url": "http://www.hotnews.ro/rss/economie"},
+				{"url": "http://www.hotnews.ro/rss/life"},
+				{"url": "http://www.hotnews.ro/rss/sport"},
+				{"url": "http://www.hotnews.ro/rss/revista"},
+				{"url": "http://www.hotnews.ro/rss/english"},
+				{"url": "http://www.gsp.ro/rss.xml"}
+			]
+
+length = links.length ;
+
+for ( i = 0 ; i < length ; ++ i )
+{
+	console.log ( links[i]["url"] ) ;
+	apelDelayed ( links[i]["url"] ) ;
+}
 
 function apelDelayed ()
 {
-	main.makeRequest ( url ) ;
+ 	setTimeout ( function () { main.makeRequest ( url ) ; } , 100 ) ;
 }

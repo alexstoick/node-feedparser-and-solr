@@ -90,6 +90,7 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 
 	self.mysql.query ( self.mysql_query , mysql_set , function ( err , res ) {
 		solr_set["id"] = res.insertId ;
+		console.log ( "Added to MySQL" ) ;
 		self.redis.set ( url , res.insertId ) ;
 		self.solr.add ( solr_set ) ;
 	}) ;
