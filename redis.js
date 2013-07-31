@@ -1,9 +1,10 @@
 var redis = require ('node-redis') ;
 
-var client = redis.createClient ( 6379 , '192.168.1.103' )
+var client = redis.createClient ( 6379 , '37.139.8.146' )
 
 // client.hset ( 'test' , 'abc' , '333') ;
 
+ client.on ( 'connect' , function () { console.log ( 'Connected to Redis') ; } ) ;
 // console.log ( client.hget ( 'test' ) ) ;
 
 	client.on('error', function (err) {
@@ -19,4 +20,4 @@ var client = redis.createClient ( 6379 , '192.168.1.103' )
 	// 	console.log ( obj.toString() ) ;
 	// }) ;
 
-	client.sadd ( 'hotnews' , 'id1' , 'id2' )
+	//client.sadd ( 'hotnews' , 'id1' , 'id2' )

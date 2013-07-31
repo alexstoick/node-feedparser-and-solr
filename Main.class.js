@@ -14,10 +14,10 @@ function Main ( )
 {
 
 	this.PORT = 6379 ;
-	this.HOST = '192.168.1.103' ;
+	this.HOST = '37.139.8.146' ;
 	this.date = new Date();
 	this.mysql_query = 'INSERT INTO articles SET ?' ;
-	this.parserURL = 'http://192.168.1.103:8080/?url=' ;
+	this.parserURL = 'http://37.139.8.146:8080/?url=' ;
 
 	this.redis = null ;
 	this.redis = redis_lib.createClient ( this.PORT , this.HOST ) ;

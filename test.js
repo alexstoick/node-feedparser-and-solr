@@ -3,13 +3,10 @@ var sleep = require ('sleep') ;
 
 var main = new Main_lib ( ) ;
 
-url = 'http://www.hotnews.ro/rss/'
+#url = 'http://www.hotnews.ro/rss/'
 
 var links = [
-				{"url": "http://www.hotnews.ro/rss/sport"},
-				{"url": "http://www.hotnews.ro/rss/economie"},
-				{"url": "http://www.hotnews.ro/rss/life"},
-				{"url": "http://www.hotnews.ro/rss/sport"},
+				{"url": "http://www.hotnews.ro/rss/"} ,
 				{"url": "http://www.hotnews.ro/rss/revista"},
 				{"url": "http://www.hotnews.ro/rss/english"},
 				{"url": "http://www.gsp.ro/rss.xml"}
@@ -23,7 +20,7 @@ for ( i = 0 ; i < length ; ++ i )
 	apelDelayed ( links[i]["url"] ) ;
 }
 
-function apelDelayed ()
+function apelDelayed ( url )
 {
  	setTimeout ( function () { main.makeRequest ( url ) ; } , 100 ) ;
 }
