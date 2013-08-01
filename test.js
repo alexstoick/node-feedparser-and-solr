@@ -1,4 +1,4 @@
-var Main_lib = require ( './main.class' ) ;
+var Main_lib = require ( './Main.class' ) ;
 var sleep = require ('sleep') ;
 
 var main = new Main_lib ( ) ;
