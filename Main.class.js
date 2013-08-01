@@ -5,8 +5,8 @@ Main.prototype = Object.create( Main );
 
 var redis_lib = require ( 'node-redis' ) ;
 var mysql_lib = require ( 'mysql' ) ;
-var Solr_lib = require ( './solr.class' ) ;
-var Parser_lib = require ( './parser.class' ) ;
+var Solr_lib = require ( './Solr.class' ) ;
+var Parser_lib = require ( './Parser.class' ) ;
 var request = require ( 'request') ;
 var events = require ( 'events' ) ;
 
