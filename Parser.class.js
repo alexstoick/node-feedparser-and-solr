@@ -32,7 +32,7 @@ Parser.prototype.request = function ( url )
 		.on('error', function (error) {
 		console.error(error);
 		})
-		.on('complete', function () { requestFinished() ; } )
+		.on('complete', function () { console.log("uat man"); } )
 		.pipe(new FeedParser())
 		.on('error', function (error) {
 			console.error(error);
