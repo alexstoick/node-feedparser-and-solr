@@ -5,15 +5,16 @@ var Main_lib = require ( './Main.class' ) ;
 
 var main = new Main_lib ( ) ;
 
-
 app.listen ( 3000 ) ;
 console.log ( 'Listening on port 3000' ) ;
 
 app.get ( '/' , function ( req , res) {
 
+	main.parser.articole = [] ;
 	console.log ( req.query.url ) ;
 	apelDelayed ( req.query.url ) ;
-	res.send ( 'request ok') ;
+	main.parser.on ( 'endParse' , function () { res.send ( main.parser.articole ) ; } ) ;
+	//res.send ( 'request ok') ;
 
 });
 

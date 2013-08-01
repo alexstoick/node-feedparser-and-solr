@@ -43,7 +43,10 @@ function Main ( )
 
 	this.parser = new Parser_lib ( this ) ;
 	this.parser.on ( 'newArticle' , this.newArticle ) ;
-	this.parser.on ( 'endParse' , function () { console.log ( "Finished parsing" ) ; }) ;
+
+	var p = this.parser ;
+
+	this.parser.on ( 'endParse' , function () { console.log ( "Finished parsing" + p.articole.length) ; }) ;
 
 
 	this.solr = new Solr_lib() ;
