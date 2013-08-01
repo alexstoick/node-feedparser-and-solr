@@ -27,12 +27,18 @@ function Main ( )
 	});
 
 	this.mysql = mysql_lib.createConnection ({
-		host: 'localhost',
+		host: '37.139.8.146',
 		user : 'root',
-		passsword: '',
+		passsword: 'Wireless123',
 		database: 'stiriAPI'
 	}) ;
 
+	this.mysql.connect( function (err ) {
+		if ( err )
+			console.log ( err ) ;
+		else
+			console.log ( 'Connected to MySQL')
+	} ) ;
 
 
 	this.parser = new Parser_lib ( this ) ;
@@ -62,6 +68,7 @@ Main.prototype.newArticle = function ( url , title , description ) {
 			//key does not exist
 			console.log ( 'Key does not exist' ) ;
 
+			self.redis.set ( url , "processed" ) ;
 			//get parserizer
 
 			request.get ( self.parserURL + url , function ( err , response, body ) {
@@ -86,12 +93,11 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 	text = parsed ["response"] ;
 
 	mysql_set =  { url: url , title: title , text: text , description: description , created_at: self.date , updated_at: self.date } ;
-	solr_set  =  { url: url , title: title , content: text , description: description }
+	solr_set  =  { url: url , title: title , content: text , description: description , last_modified: self.date}
+
+	self.solr.add ( solr_set ) ;
 
 	self.mysql.query ( self.mysql_query , mysql_set , function ( err , res ) {
-		solr_set["id"] = res.insertId ;
-		console.log ( "Added to MySQL" ) ;
-		self.redis.set ( url , res.insertId ) ;
-		self.solr.add ( solr_set ) ;
+		console.log ( "Added to MySQL" + err ) ;
 	}) ;
 }

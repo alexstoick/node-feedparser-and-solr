@@ -9,7 +9,7 @@ var solrClient = solr.createClient ( HOST  , PORT_SOLR ) ;
 solrClient.autoCommit = true ;
 
 // Delete every document
-solrClient.delete('id','*',function(err,obj){
+solrClient.delete('url','*',function(err,obj){
    if(err){
    	console.log(err);
    }else{

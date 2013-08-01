@@ -3,9 +3,10 @@ var sleep = require ('sleep') ;
 
 var main = new Main_lib ( ) ;
 
-#url = 'http://www.hotnews.ro/rss/'
+//url = 'http://www.hotnews.ro/rss/'
 
 var links = [
+				{"url": "http://www.hotnews.ro/rss/revista"},
 				{"url": "http://www.hotnews.ro/rss/"} ,
 				{"url": "http://www.hotnews.ro/rss/revista"},
 				{"url": "http://www.hotnews.ro/rss/english"},
