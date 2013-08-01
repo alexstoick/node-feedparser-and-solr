@@ -1,6 +1,6 @@
 
 
-var FeedParser = require('FeedParser') ,
+var FeedParser = require('feedparser') ,
 	request = require ( 'request') ;
 var events = require('events') ;
 
