@@ -1,7 +1,7 @@
 var express = require('express') ;
 var app = express() ;
 
-var Main_lib = require ( './main.class' ) ;
+var Main_lib = require ( './Main.class' ) ;
 
 var main = new Main_lib ( ) ;
 
