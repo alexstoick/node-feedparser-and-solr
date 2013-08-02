@@ -35,8 +35,8 @@ mysql.connect( function (err ) {
 } ) ;
 
 
-app.listen ( 3500 ) ;
-console.log ( 'Listening on port 3500' ) ;
+app.listen ( 3000 ) ;
+console.log ( 'Listening on port 3000' ) ;
 
 app.get ( '/' , function ( req , res) {
 
@@ -48,6 +48,8 @@ app.get ( '/' , function ( req , res) {
 	else
 		date = req.query.date ;
 
+	console.log ( date ) ;
+
 	var main = new Main_lib ( redis , mysql , solr , new Date ( date )) ;
 	articles = [] ;
 
@@ -58,7 +60,7 @@ app.get ( '/' , function ( req , res) {
 		articles.push ( article ) ;
 	}) ;
 
-	main.parser.on ( 'endParse' , function () { res.send ( 'winner' ) ; } ) ;
+	main.parser.on ( 'endParse' , function () { res.send ( articles ) ; } ) ;
 
 });
 
