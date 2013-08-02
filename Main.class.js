@@ -1,8 +1,6 @@
 
 module.exports = Main  ;
 
-Main.prototype = Object.create( Main );
-
 var redis_lib = require ( 'node-redis' ) ;
 var mysql_lib = require ( 'mysql' ) ;
 var Solr_lib = require ( './Solr.class' ) ;
@@ -10,9 +8,19 @@ var Parser_lib = require ( './Parser.class' ) ;
 var request = require ( 'request') ;
 var events = require ( 'events' ) ;
 
-function Main ( )
+Main.super_ = events.EventEmitter;
+Main.prototype = Object.create(events.EventEmitter.prototype, {
+	constructor: {
+		value: Main,
+		enumerable: false
+	}
+});
+
+
+function Main ( currentDate )
 {
 
+	events.EventEmitter.call(this);
 	this.PORT = 6379 ;
 	this.HOST = '37.139.8.146' ;
 	this.date = new Date();
@@ -45,10 +53,17 @@ function Main ( )
 	this.parser = new Parser_lib ( this ) ;
 	this.parser.on ( 'newArticle' , this.newArticle ) ;
 
-	var p = this.parser ;
+	this.currentDate = currentDate ;
 
-	this.parser.on ( 'endParse' , function () { 
-		console.log ( "Finished parsing " + p.articole.length + " procesate:" + this.articles_proccessed ) ;
+	console.log ( 'data creata:' + this.currentDate ) ;
+
+	var p = this.parser ;
+	var procesate = this.articles_proccessed ;
+	var self = this ;
+
+	this.parser.on ( 'endParse' , function () {
+		self.count = p.articole.length ;
+		console.log ( "Finished parsing " + self.count + " procesate:" + self.articles_proccessed ) ;
 	}) ;
 
 
@@ -62,10 +77,15 @@ Main.prototype.makeRequest = function ( url )
 	this.parser.request ( url ) ;
 }
 
-Main.prototype.newArticle = function ( url , title , description ) {
+Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 
 	//console.log ( url + " " + title + " " + description ) ;
 	var self = this.current_instance ;
+
+	if ( self.currentDate < pubDate )
+	{
+		self.emit ( 'newArticleSinceUpdate' , url , title , description ) ;
+	}
 
 	self.redis.exists ( url , function ( err , res) {
 
@@ -86,6 +106,11 @@ Main.prototype.newArticle = function ( url , title , description ) {
 		else
 		{
 			console.log ( 'Key exists. Skipping ... ' ) ;
+			self.articles_proccessed ++ ;
+			if ( self.articles_proccessed == self.count )
+			{
+				self.emit ( 'finished' ) ;
+			}
 		}
 
 	} ) ;
@@ -101,10 +126,20 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 	mysql_set =  { url: url , title: title , text: text , description: description , created_at: self.date , updated_at: self.date } ;
 	solr_set  =  { url: url , title: title , content: text , description: description , last_modified: self.date}
 
-	self.solr.add ( solr_set ) ;
+	self.solr.add ( solr_set , function ( err , res ) {
+
+		console.log ( 'Added to Solr') ;
+
+		instance.articles_proccessed ++ ;
+		console.log ( instance.articles_proccessed ) ;
+		if ( instance.articles_proccessed == instance.count )
+		{
+			self.emit ( 'finished' ) ;
+		}
+	}) ;
 
 	self.mysql.query ( self.mysql_query , mysql_set , function ( err , res ) {
-		console.log ( "Added to MySQL" + err ) ;
-		instance.articles_proccessed ++ ;
+		console.log ( "Added to MySQL" ) ;
+
 	}) ;
 }

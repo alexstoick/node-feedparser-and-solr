@@ -25,20 +25,19 @@ Parser.prototype = Object.create(events.EventEmitter.prototype, {
 Parser.prototype.request = function ( url )
 {
 	var self = this ;
-	//self.start = 0 ;
+
 	self.startDate = new Date() ;
 
 	request(url)
 		.on('error', function (error) {
-		console.error(error);
+			console.error(error);
 		})
-		.on('complete', function () { console.log("uat man"); } )
 		.pipe(new FeedParser())
 		.on('error', function (error) {
 			console.error(error);
 		})
 		.on('meta', function (meta) {
-			console.log('===== %s =====', meta.title);
+			console.log ( 'Feed title:  ' + meta.title ) ;
 		})
 		.on('readable', function() {
 			var stream = this, item;
@@ -49,9 +48,8 @@ Parser.prototype.request = function ( url )
 						title : item.title ,
 						url : item.link
 					}
-
 				self.articole.push ( articol ) ;
-				self.emit ( 'newArticle' , item.link , item.title , item.description , this.current_instance ) ;
+				self.emit ( 'newArticle' , item.link , item.title , item.description , item.pubDate ) ;
 				self.start ++ ;
 
 			}

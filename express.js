@@ -3,7 +3,7 @@ var app = express() ;
 
 var Main_lib = require ( './Main.class' ) ;
 
-var main = new Main_lib ( ) ;
+var main = new Main_lib ( new Date() ) ;
 
 app.listen ( 3000 ) ;
 console.log ( 'Listening on port 3000' ) ;
