@@ -52,7 +52,11 @@ app.get ( '/' , function ( req , res) {
 
 	apelDelayed ( req.query.url , main ) ;
 
-	main.parser.on ( 'endParse' , function () { console.log ( main.articles.length ) ; res.send( main.articles ); } ) ;
+	main.parser.on ( 'endParse' , function () {
+		object = { "feedId": req.query.feedId , articles: main.articles } ;
+		//console.log ( main.articles.length ) ; 
+		res.send( object );
+	} ) ;
 
 });
 
