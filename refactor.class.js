@@ -2,6 +2,7 @@
 module.exports = Main  ;
 
 var Parser_lib = require ( './Parser.class' ) ;
+var request = require ( 'request') ;
 var events = require ( 'events' ) ;
 
 Main.super_ = events.EventEmitter;
@@ -31,6 +32,7 @@ function Main ( redis , mysql , solr , currentDate )
 	this.parser.on ( 'newArticle' , this.newArticle ) ;
 
 	this.currentDate = currentDate ;
+	this.articles = [] ;
 
 }
 
@@ -45,6 +47,8 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 
 	if ( self.currentDate < pubDate )
 	{
+		article = { url: url , title: title , description: description } ;
+		self.articles.push ( article ) ;
 		self.emit ( 'newArticleSinceUpdate' , url , title , description ) ;
 	}
 
@@ -57,6 +61,8 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 
 			//get parserizer
 			request.get ( self.parserURL + url , function ( err , response, body ) {
+				if ( err )
+					console.log ( 'request error' + err ) ;
 				self.addToSolrAndMySQL ( url , title , description , body , self ) ;
 			}) ;
 
@@ -86,7 +92,6 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 	self.solr.add ( solr_set , function ( err , res ) {
 
 		instance.articles_proccessed ++ ;
-		console.log ( instance.articles_proccessed ) ;
 		if ( instance.articles_proccessed == instance.count )
 		{
 			self.emit ( 'finished' ) ;

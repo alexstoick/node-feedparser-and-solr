@@ -17,7 +17,7 @@ solr.createClient();
 var redis = redis_lib.createClient ( 6379, HOST ) ;
 redis.on ( 'connect' , function () { console.log ( 'Connected to Redis') ; } ) ;
 redis.on ( 'error', function (err) {
-	console.log('Error ' + err);
+	console.log('Redis Error ' + err);
 });
 
 var mysql = mysql_lib.createConnection ({
@@ -48,19 +48,11 @@ app.get ( '/' , function ( req , res) {
 	else
 		date = req.query.date ;
 
-	console.log ( date ) ;
-
 	var main = new Main_lib ( redis , mysql , solr , new Date ( date )) ;
-	articles = [] ;
 
 	apelDelayed ( req.query.url , main ) ;
 
-	main.on ( 'newArticleSinceUpdate' , function ( url , title , description ) {
-		article = { url: url , title: title , description: description } ;
-		articles.push ( article ) ;
-	}) ;
-
-	main.parser.on ( 'endParse' , function () { res.send ( articles ) ; } ) ;
+	main.parser.on ( 'endParse' , function () { console.log ( main.articles.length ) ; res.send( main.articles ); } ) ;
 
 });
 
