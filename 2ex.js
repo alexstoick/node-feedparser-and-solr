@@ -1,8 +1,38 @@
 var express = require('express') ;
 var app = express() ;
 
-var Main_lib = require ( './Main.class' ) ;
+var Main_lib = require ( './refactor.class' ) ;
 
+
+var redis_lib = require ( 'node-redis' ) ;
+var mysql_lib = require ( 'mysql' ) ;
+var Solr_lib = require ( './Solr.class' ) ;
+
+HOST = '37.139.8.146' ;
+
+var solr = new Solr_lib( HOST , 8983 ) ;
+solr.createClient();
+
+
+var redis = redis_lib.createClient ( 6379, HOST ) ;
+redis.on ( 'connect' , function () { console.log ( 'Connected to Redis') ; } ) ;
+redis.on ( 'error', function (err) {
+	console.log('Error ' + err);
+});
+
+var mysql = mysql_lib.createConnection ({
+	host: HOST ,
+	user : 'root',
+	passsword: 'Wireless123',
+	database: 'stiriAPI'
+}) ;
+
+mysql.connect( function (err ) {
+	if ( err )
+		console.log ( err ) ;
+	else
+		console.log ( 'Connected to MySQL')
+} ) ;
 
 
 app.listen ( 3500 ) ;
@@ -18,7 +48,7 @@ app.get ( '/' , function ( req , res) {
 	else
 		date = req.query.date ;
 
-	var main = new Main_lib ( new Date ( date )) ;
+	var main = new Main_lib ( redis , mysql , solr , new Date ( date )) ;
 	articles = [] ;
 
 	apelDelayed ( req.query.url , main ) ;
@@ -28,7 +58,7 @@ app.get ( '/' , function ( req , res) {
 		articles.push ( article ) ;
 	}) ;
 
-	main.parser.on ( 'endParse' , function () { res.send ( articles ) ; } ) ;
+	main.parser.on ( 'endParse' , function () { res.send ( 'winner' ) ; } ) ;
 
 });
 

@@ -5,10 +5,10 @@ var solr_lib = require ('solr-client') ,
 module.exports = Solr ;
 
 
-function Solr() {
+function Solr( HOST , PORT ) {
 	events.EventEmitter.call(this);
-	this.HOST = '37.139.8.146' ;
-	this.PORT_SOLR = 8983 ;
+	this.HOST = HOST ;
+	this.PORT_SOLR = PORT ;
 	this.client = null ;
 }
 
