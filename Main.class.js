@@ -41,12 +41,15 @@ function Main ( )
 	} ) ;
 
 
+	this.articles_proccessed = 0 ;
 	this.parser = new Parser_lib ( this ) ;
 	this.parser.on ( 'newArticle' , this.newArticle ) ;
 
 	var p = this.parser ;
 
-	this.parser.on ( 'endParse' , function () { console.log ( "Finished parsing" + p.articole.length) ; }) ;
+	this.parser.on ( 'endParse' , function () { 
+		console.log ( "Finished parsing " + p.articole.length + " procesate:" + this.articles_proccessed ) ;
+	}) ;
 
 
 	this.solr = new Solr_lib() ;
@@ -102,5 +105,6 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 
 	self.mysql.query ( self.mysql_query , mysql_set , function ( err , res ) {
 		console.log ( "Added to MySQL" + err ) ;
+		instance.articles_proccessed ++ ;
 	}) ;
 }
