@@ -10,7 +10,15 @@ console.log ( 'Listening on port 3500' ) ;
 
 app.get ( '/' , function ( req , res) {
 
-	var main = new Main_lib ( new Date ( req.query.date )) ;
+	if ( req.query.date == null )
+	{
+		date = new Date() ;
+		date.setHours( date.getHours() - 24 ) ;
+	}
+	else
+		date = req.query.date ;
+
+	var main = new Main_lib ( new Date ( date )) ;
 	articles = [] ;
 
 	apelDelayed ( req.query.url , main ) ;
@@ -21,7 +29,6 @@ app.get ( '/' , function ( req , res) {
 	}) ;
 
 	main.parser.on ( 'endParse' , function () { res.send ( articles ) ; } ) ;
-
 
 });
 

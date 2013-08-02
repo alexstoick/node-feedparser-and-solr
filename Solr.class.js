@@ -28,12 +28,12 @@ Solr.prototype.createClient = function () {
 	console.log ( 'Created SOLR client' ) ;
 }
 
-Solr.prototype.add = function ( object , fct ) {
+Solr.prototype.add = function ( object , callback ) {
 
 	var self = this ;
 	var client = self.client ;
 
-	client.add ( object , fct ) ;
+	client.add ( object , callback ) ;
 
 }
 
