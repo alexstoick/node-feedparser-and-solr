@@ -62,8 +62,7 @@ Parser.prototype.request = function ( url )
 Parser.prototype.emmitRequestFinished = function ( parent )
 {
 	var self = parent ;
-	self.emit ( 'endParse' ) ;
 	self.end = new Date() ;
-
 	console.log ( "Duration: "  + (self.end - self.startDate) ) ;
+	self.emit ( 'endParse' ) ;
 }

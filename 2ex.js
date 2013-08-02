@@ -17,7 +17,7 @@ solr.createClient();
 var redis = redis_lib.createClient ( 6379, HOST ) ;
 redis.on ( 'connect' , function () { console.log ( 'Connected to Redis') ; } ) ;
 redis.on ( 'error', function (err) {
-	console.log('Redis Error ' + err);
+	console.log('RedisError ' + err);
 });
 
 var mysql = mysql_lib.createConnection ({

@@ -57,7 +57,7 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 		if ( res == 0 )
 		{
 			//Setup key in redis
-			self.redis.set ( url , self.date ) ;
+			self.redis.set ( url , 'updated' ) ;
 
 			//get parserizer
 			request.get ( self.parserURL + url , function ( err , response, body ) {
