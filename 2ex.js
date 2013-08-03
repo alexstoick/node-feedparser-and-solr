@@ -40,25 +40,33 @@ console.log ( 'Listening on port 3000' ) ;
 
 app.get ( '/' , function ( req , res) {
 
-	if ( req.query.date == null )
+	if ( req.query.feedId == null )
 	{
-		date = new Date() ;
-		date.setHours( date.getHours() - 24 ) ;
+		res.send ( 400 , 'Wrong parameters' ) ;
 	}
 	else
-		date = req.query.date ;
+	{
+		if ( req.query.date == null )
+		{
+			date = new Date() ;
+			date.setHours( date.getHours() - 24 ) ;
+		}
+		else
+			date = req.query.date ;
 
-	var main = new Main_lib ( redis , mysql , solr , new Date ( date )) ;
+		var main = new Main_lib ( redis , mysql , solr , new Date ( date ) , req.query.feedId ) ;
 
-	res.header("Content-Type", "application/json; charset=utf-8");
+		res.header("Content-Type", "application/json; charset=utf-8");
 
-	apelDelayed ( req.query.url , main ) ;
+		apelDelayed ( req.query.url , main ) ;
 
-	main.parser.on ( 'endParse' , function () {
-		object = { "feedId": req.query.feedId , articles: main.articles } ;
-		//console.log ( main.articles.length ) ;
-		res.send( object );
-	} ) ;
+		main.parser.on ( 'endParse' , function () {
+			object = { "feedId": req.query.feedId , articles: main.articles } ;
+			//console.log ( main.articles.length ) ;
+			res.send( object );
+		} ) ;
+
+	}
 
 });
 

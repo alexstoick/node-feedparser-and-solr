@@ -14,7 +14,7 @@ Main.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 
-function Main ( redis , mysql , solr , currentDate )
+function Main ( redis , mysql , solr , currentDate , feedId )
 {
 
 	events.EventEmitter.call(this);
@@ -23,6 +23,8 @@ function Main ( redis , mysql , solr , currentDate )
 	this.mysql_query = 'INSERT INTO articles SET ?' ;
 	this.parserURL = 'http://37.139.8.146:8080/?url=' ;
 
+
+	this.feedId = feedId ;
 	this.redis = redis ;
 	this.solr = solr ;
 	this.mysql = mysql ;
@@ -86,7 +88,7 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 	parsed = JSON.parse ( response ) ;
 	text = parsed ["response"] ;
 
-	mysql_set =  { url: url , title: title , text: text , description: description , created_at: self.date , updated_at: self.date } ;
+	mysql_set =  { url: url , title: title , text: text , description: description , created_at: self.date , updated_at: self.date , feed: self.feedId } ;
 	solr_set  =  { url: url , title: title , content: text , description: description , last_modified: self.date}
 
 	self.solr.add ( solr_set , function ( err , res ) {
