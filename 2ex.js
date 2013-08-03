@@ -50,11 +50,13 @@ app.get ( '/' , function ( req , res) {
 
 	var main = new Main_lib ( redis , mysql , solr , new Date ( date )) ;
 
+	res.header("Content-Type", "application/json; charset=utf-8");
+
 	apelDelayed ( req.query.url , main ) ;
 
 	main.parser.on ( 'endParse' , function () {
 		object = { "feedId": req.query.feedId , articles: main.articles } ;
-		//console.log ( main.articles.length ) ; 
+		//console.log ( main.articles.length ) ;
 		res.send( object );
 	} ) ;
 
