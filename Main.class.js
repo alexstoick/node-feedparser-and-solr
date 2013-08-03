@@ -31,6 +31,10 @@ function Main ( redis , mysql , solr , currentDate , feedId )
 
 	this.parser = new Parser_lib ( this ) ;
 	this.articles_proccessed = 0 ;
+	this.count = 500 ;
+
+	var self = this ;
+	this.parser.on ( 'endParse' , function ( count ) { self.count = count -1 ; } ) ;
 	this.parser.on ( 'newArticle' , this.newArticle ) ;
 
 	console.log ( currentDate ) ;
@@ -47,18 +51,28 @@ Main.prototype.makeRequest = function ( url )
 Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 
 	var self = this.current_instance ;
+	var newArticle = false ;
 
 	if ( self.currentDate < pubDate )
 	{
-		article = { url: url , title: title , description: description } ;
-		self.articles.push ( article ) ;
-		self.emit ( 'newArticleSinceUpdate' , url , title , description ) ;
+		newArticle = true ;
 	}
 
 	self.redis.exists ( url , function ( err , res) {
 
 		if ( res == 0 )
 		{
+			if ( newArticle )
+			{
+				article = { url: url , title: title , description: description , parsed: null } ;
+				self.articles.push ( article ) ;
+			}
+
+			self.articles_proccessed ++ ;
+			if ( self.articles_proccessed == self.count )
+			{
+				self.emit ( 'finished' ) ;
+			}
 			//Setup key in redis
 			self.redis.set ( url , 'updated' ) ;
 
@@ -68,10 +82,25 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 					console.log ( 'request error' + err ) ;
 				self.addToSolrAndMySQL ( url , title , description , body , self ) ;
 			}) ;
-
 		}
 		else
 		{
+
+			if ( newArticle )
+			{
+				self.mysql.getConnection ( function ( err , mysql_con) {
+					var connection = mysql_con ;
+					connection.query ( "SELECT text FROM articles WHERE url='" + url + "'" , function ( err , res) {
+
+						if ( res.length == 0 )
+							console.log ( url ) ;
+						article = { url: url , title: title , description: description , parsed: res[0].text } ;
+						self.articles.push ( article ) ;
+
+					}) ;
+				});
+			}
+
 			self.articles_proccessed ++ ;
 			if ( self.articles_proccessed == self.count )
 			{
@@ -93,12 +122,9 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 	solr_set  =  { url: url , title: title , content: text , description: description , last_modified: self.date}
 
 	self.solr.add ( solr_set , function ( err , res ) {
-
-		instance.articles_proccessed ++ ;
-		if ( instance.articles_proccessed == instance.count )
-		{
-			self.emit ( 'finished' ) ;
-		}
+		//solr callback
+		if ( err )
+			console.log ( err ) ;
 	}) ;
 
 	self.mysql.getConnection ( function ( err , mysql_con ) {

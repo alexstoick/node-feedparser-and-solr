@@ -1,1 +1,8 @@
-2013-08-02T09:17:15.309Z
+Created SOLR client
+Listening on port 3000
+Connected to Redis
+Thu Aug 01 2013 21:49:11 GMT+0300 (GTB Daylight Time)
+Feed title:  Hotnews.ro
+Duration: 289 225
+http://www.hotnews.ro/stiri-international-15312160-printul-william-sotia-inregistrat-oficial-nasterea-printului-george.htm
+ select * from articles where url="http://www.hotnews.ro/stiri-international-15312160-printul-william-sotia-inregistrat-oficial-nasterea-printului-george.htm"

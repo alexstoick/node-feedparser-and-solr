@@ -26,6 +26,8 @@ Parser.prototype.request = function ( url )
 {
 	var self = this ;
 
+	self.count = 0 ;
+
 	self.startDate = new Date() ;
 
 	request(url)
@@ -43,12 +45,8 @@ Parser.prototype.request = function ( url )
 			var stream = this, item;
 			while (item = stream.read()) {
 
-				var articol = {
-						description : item.description , //content for SOLR
-						title : item.title ,
-						url : item.link
-					}
-				self.articole.push ( articol ) ;
+
+				self.count ++ ;
 				self.emit ( 'newArticle' , item.link , item.title , item.description , item.pubDate ) ;
 				self.start ++ ;
 
@@ -63,6 +61,6 @@ Parser.prototype.emmitRequestFinished = function ( parent )
 {
 	var self = parent ;
 	self.end = new Date() ;
-	console.log ( "Duration: "  + (self.end - self.startDate) ) ;
-	self.emit ( 'endParse' ) ;
+	console.log ( "Duration: "  + (self.end - self.startDate) + " " + self.count ) ;
+	self.emit ( 'endParse' , self.count ) ;
 }
