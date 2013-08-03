@@ -33,6 +33,7 @@ function Main ( redis , mysql , solr , currentDate , feedId )
 	this.articles_proccessed = 0 ;
 	this.parser.on ( 'newArticle' , this.newArticle ) ;
 
+	console.log ( currentDate ) ;
 	this.currentDate = currentDate ;
 	this.articles = [] ;
 
@@ -100,9 +101,15 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 		}
 	}) ;
 
-	self.mysql.query ( self.mysql_query , mysql_set , function ( err , res ) {
-		//mysql callback
-		if ( err )
-			console.log ( err ) ;
-	}) ;
+	self.mysql.getConnection ( function ( err , mysql_con ) {
+
+		var connection = mysql_con ;
+
+		connection.query ( self.mysql_query , mysql_set , function ( err , res ) {
+			if ( err )
+				console.log ( err ) ;
+			connection.end();
+		}) ;
+
+	})
 }

@@ -20,20 +20,12 @@ redis.on ( 'error', function (err) {
 	console.log('RedisError ' + err);
 });
 
-var mysql = mysql_lib.createConnection ({
+var mysql = mysql_lib.createPool ({
 	host: HOST ,
 	user : 'root',
 	passsword: 'Wireless123',
 	database: 'stiriAPI'
 }) ;
-
-mysql.connect( function (err ) {
-	if ( err )
-		console.log ( err ) ;
-	else
-		console.log ( 'Connected to MySQL')
-} ) ;
-
 
 app.listen ( 3000 ) ;
 console.log ( 'Listening on port 3000' ) ;
