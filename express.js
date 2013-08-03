@@ -24,7 +24,8 @@ var mysql = mysql_lib.createPool ({
 	host: HOST ,
 	user : 'root',
 	passsword: 'Wireless123',
-	database: 'stiriAPI'
+	database: 'stiriAPI',
+	connectionLimit: 100
 }) ;
 
 app.listen ( 3000 ) ;
@@ -52,7 +53,7 @@ app.get ( '/' , function ( req , res) {
 
 		apelDelayed ( req.query.url , main ) ;
 
-		main.parser.on ( 'finished' , function () {
+		main.on ( 'finished' , function () {
 			object = { "feedId": req.query.feedId , articles: main.articles } ;
 			console.log ( main.articles.length ) ;
 			res.send( object );

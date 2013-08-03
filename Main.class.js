@@ -32,9 +32,10 @@ function Main ( redis , mysql , solr , currentDate , feedId )
 	this.parser = new Parser_lib ( this ) ;
 	this.articles_proccessed = 0 ;
 	this.count = 500 ;
+	this.shouldEnter = 0 ;
 
 	var self = this ;
-	this.parser.on ( 'endParse' , function ( count ) { self.count = count -1 ; } ) ;
+	this.parser.on ( 'endParse' , function ( count ) { self.count = count ; } ) ;
 	this.parser.on ( 'newArticle' , this.newArticle ) ;
 
 	console.log ( currentDate ) ;
@@ -55,6 +56,8 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 
 	if ( self.currentDate < pubDate )
 	{
+		self.shouldEnter ++ ;
+		console.log("shoudl enter" + self.shouldEnter ) ;
 		newArticle = true ;
 	}
 
@@ -64,13 +67,14 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 		{
 			if ( newArticle )
 			{
-				article = { url: url , title: title , description: description , parsed: null } ;
+				article = { url: url , title: title , description: null } ;
 				self.articles.push ( article ) ;
 			}
 
 			self.articles_proccessed ++ ;
-			if ( self.articles_proccessed == self.count )
+			if ( self.articles_proccessed === self.count )
 			{
+				console.log ( ' finished') ;
 				self.emit ( 'finished' ) ;
 			}
 			//Setup key in redis
@@ -93,19 +97,35 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 					connection.query ( "SELECT text FROM articles WHERE url='" + url + "'" , function ( err , res) {
 
 						if ( res.length == 0 )
-							console.log ( url ) ;
-						article = { url: url , title: title , description: description , parsed: res[0].text } ;
-						self.articles.push ( article ) ;
+						{
+							article = { url: url , title: title , description : null } ;
+							self.articles.push ( article ) ;
+						}
+						else
+						{
+							article = { url: url , title: title ,  description : res[0].text } ;
+							self.articles.push ( article ) ;
+						}
 
+						self.articles_proccessed ++ ;
+						if ( self.articles_proccessed === self.count )
+						{
+							self.emit ( 'finished' ) ;
+						}
+						connection.release();
 					}) ;
+
 				});
 			}
-
-			self.articles_proccessed ++ ;
-			if ( self.articles_proccessed == self.count )
+			else
 			{
-				self.emit ( 'finished' ) ;
+				self.articles_proccessed ++ ;
+				if ( self.articles_proccessed === self.count )
+				{
+					self.emit ( 'finished' ) ;
+				}
 			}
+
 		}
 
 	} ) ;
@@ -123,6 +143,7 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 
 	self.solr.add ( solr_set , function ( err , res ) {
 		//solr callback
+		console.log ( 'Added to SOLR') ;
 		if ( err )
 			console.log ( err ) ;
 	}) ;
@@ -132,9 +153,10 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 		var connection = mysql_con ;
 
 		connection.query ( self.mysql_query , mysql_set , function ( err , res ) {
+			console.log ( 'Added to MySQL') ;
 			if ( err )
 				console.log ( err ) ;
-			connection.end();
+			connection.release();
 		}) ;
 
 	})
