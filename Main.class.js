@@ -112,7 +112,7 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 						{
 							self.emit ( 'finished' ) ;
 						}
-						connection.release();
+						connection.end();
 					}) ;
 
 				});
@@ -156,7 +156,7 @@ Main.prototype.addToSolrAndMySQL = function ( url , title , description , respon
 			console.log ( 'Added to MySQL') ;
 			if ( err )
 				console.log ( err ) ;
-			connection.release();
+			connection.end();
 		}) ;
 
 	})
