@@ -46,8 +46,9 @@ Parser.prototype.request = function ( url )
 			while (item = stream.read()) {
 
 
+				date = ( item.pubDate || item.published || item.date ) ;
 				self.count ++ ;
-				self.emit ( 'newArticle' , item.link , item.title , item.description , item.pubDate ) ;
+				self.emit ( 'newArticle' , item.link , item.title , item.description , date ) ;
 				self.start ++ ;
 
 			}

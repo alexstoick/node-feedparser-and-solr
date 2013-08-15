@@ -51,24 +51,18 @@ app.get ( '/' , function ( req , res) {
 
 		res.header("Content-Type", "application/json; charset=utf-8");
 
-		apelDelayed ( req.query.url , main ) ;
+		main.makeRequest ( req.query.url  ) ;
 
 		main.on ( 'finished' , function () {
 			object = { "feedId": req.query.feedId , articles: main.articles } ;
 			console.log ( main.articles.length ) ;
+			console.log ( main.articles[0].date ) ;
 			res.send( object );
 		} ) ;
-
 	}
-
 });
 
 app.use(function(err, req, res, next){
   console.error(err.stack);
   res.send(500, 'Something broke!');
 });
-
-function apelDelayed ( url , main )
-{
- 	setTimeout ( function () { main.makeRequest ( url ) ; } , 100 ) ;
-}

@@ -32,7 +32,6 @@ function Main ( redis , mysql , solr , currentDate , feedId )
 	this.parser = new Parser_lib ( this ) ;
 	this.articles_proccessed = 0 ;
 	this.count = 500 ;
-	this.shouldEnter = 0 ;
 
 	var self = this ;
 	this.parser.on ( 'endParse' , function ( count ) { self.count = count ; } ) ;
@@ -56,8 +55,6 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 
 	if ( self.currentDate < pubDate )
 	{
-		self.shouldEnter ++ ;
-		console.log("shoudl enter" + self.shouldEnter ) ;
 		newArticle = true ;
 	}
 
@@ -67,14 +64,14 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 		{
 			if ( newArticle )
 			{
-				article = { url: url , title: title , description: null } ;
+				article = { url: url , title: title , description: null , date: pubDate } ;
 				self.articles.push ( article ) ;
 			}
 
 			self.articles_proccessed ++ ;
 			if ( self.articles_proccessed === self.count )
 			{
-				console.log ( ' finished') ;
+				console.log ( 'finished') ;
 				self.emit ( 'finished' ) ;
 			}
 			//Setup key in redis
@@ -84,7 +81,7 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 			request.get ( self.parserURL + url , function ( err , response, body ) {
 				if ( err )
 					console.log ( 'request error' + err ) ;
-				self.addToSolrAndMySQL ( url , title , description , body , self ) ;
+				self.addToSolrAndMySQL ( url , title , description , body , pubDate , self ) ;
 			}) ;
 		}
 		else
@@ -94,16 +91,16 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 			{
 				self.mysql.getConnection ( function ( err , mysql_con) {
 					var connection = mysql_con ;
-					connection.query ( "SELECT text FROM articles WHERE url='" + url + "'" , function ( err , res) {
+					connection.query ( "SELECT text, created_at FROM articles WHERE url='" + url + "'" , function ( err , res) {
 
 						if ( res.length == 0 )
 						{
-							article = { url: url , title: title , description : null } ;
+							article = { url: url , title: title , description : null , date: null } ;
 							self.articles.push ( article ) ;
 						}
 						else
 						{
-							article = { url: url , title: title ,  description : res[0].text } ;
+							article = { url: url , title: title ,  description : res[0].text , date: res[0].created_at } ;
 							self.articles.push ( article ) ;
 						}
 
@@ -132,13 +129,13 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 
 }
 
-Main.prototype.addToSolrAndMySQL = function ( url , title , description , response , instance )
+Main.prototype.addToSolrAndMySQL = function ( url , title , description , response , pubDate , instance )
 {
 	var self = instance ;
 	parsed = JSON.parse ( response ) ;
 	text = parsed ["response"] ;
 
-	mysql_set =  { url: url , title: title , text: text , description: description , created_at: self.date , updated_at: self.date , feed: self.feedId } ;
+	mysql_set =  { url: url , title: title , text: text , description: description , created_at: pubDate , feed: self.feedId } ;
 	solr_set  =  { url: url , title: title , content: text , description: description , last_modified: self.date}
 
 	self.solr.add ( solr_set , function ( err , res ) {
