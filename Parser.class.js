@@ -40,12 +40,11 @@ Parser.prototype.request = function ( url )
 		})
 		.on('meta', function (meta) {
 			console.log ( 'Feed title:  ' + meta.title ) ;
+			self.emit ( 'feedTitle' , meta.title ) ;
 		})
 		.on('readable', function() {
 			var stream = this, item;
 			while (item = stream.read()) {
-
-
 				date = ( item.pubDate || item.published || item.date ) ;
 				self.count ++ ;
 				self.emit ( 'newArticle' , item.link , item.title , item.description , date ) ;

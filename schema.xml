@@ -12,7 +12,7 @@
 	<field name="author" type="text_general" indexed="true" stored="true"/>
 	<field name="keywords" type="text_general" indexed="true" stored="true" multiValued="true"/>
 	<field name="category" type="text_general" indexed="true" stored="true"/>
-	<field name="url" type="text_general" indexed="true" stored="true"/>
+	<field name="url" type="url" indexed="true" stored="true"/>
 	<field name="last_modified" type="date" indexed="true" stored="true"/>
 	<field name="_version_" type="long" indexed="true" stored="true"/>
 
@@ -22,6 +22,16 @@
 		<fieldType name="string" class="solr.StrField" sortMissingLast="true" />
 		<fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
 	    <fieldType name="date" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
+	    <fieldType name="url" class="solr.TextField">
+	    	<analyzer type="index">
+				<tokenizer class="solr.KeywordTokenizerFactory"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+			</analyzer>
+			<analyzer type="query">
+				<tokenizer class="solr.KeywordTokenizerFactory"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+			</analyzer>
+	    </fieldType>
 		<fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
 				<tokenizer class="solr.StandardTokenizerFactory"/>

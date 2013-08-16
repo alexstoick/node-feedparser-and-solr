@@ -2,7 +2,7 @@ var express = require('express') ;
 var app = express() ;
 
 var Main_lib = require ( './Main.class' ) ;
-
+var Parser_lib = require ( './Parser.class' ) ;
 
 var redis_lib = require ( 'node-redis' ) ;
 var mysql_lib = require ( 'mysql' ) ;
@@ -60,6 +60,26 @@ app.get ( '/' , function ( req , res) {
 			res.send( object );
 		} ) ;
 	}
+});
+
+app.get ( '/title' , function ( req , res ) {
+
+	if ( req.query.url == null )
+	{
+		res.send ( 400 , 'Wrong parameters' ) ;
+	}
+	else
+	{
+		var parser = new Parser_lib ( this ) ;
+
+		parser.on ( 'feedTitle' , function ( title ) {
+			object = { "feedTitle": title } ;
+			res.send ( object ) ;
+		} ) ;
+		parser.request ( req.query.url ) ;
+
+	}
+
 });
 
 app.use(function(err, req, res, next){
