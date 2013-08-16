@@ -73,8 +73,7 @@ app.get ( '/title' , function ( req , res ) {
 		var parser = new Parser_lib ( this ) ;
 
 		parser.on ( 'feedTitle' , function ( title ) {
-			object = { "feedTitle": title } ;
-			res.send ( object ) ;
+			res.send ( title ) ;
 		} ) ;
 		parser.request ( req.query.url ) ;
 
