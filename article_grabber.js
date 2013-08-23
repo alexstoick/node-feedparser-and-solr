@@ -32,7 +32,13 @@ app.get ( '/' , function ( web_req , web_res ) {
 	if ( web_req.query.date == null )
 		query = "SELECT DISTINCT url, title, text, created_at FROM articles WHERE `feed` = '"+feed+"' ORDER BY created_at DESC LIMIT 30" ;
 	else
-		query = "SELECT DISTINCT url, title, text, created_at FROM articles WHERE `created_at` > '"+web_req.query.date+"' AND `feed` = '"+feed+"' ORDER BY created_at DESC" ;
+	{
+		date = web_req.query.date ;
+		query = "SELECT DISTINCT url, title, text, created_at FROM articles WHERE `created_at` > '"+date+"' AND `feed` = '"+feed+"' ORDER BY created_at DESC" ;
+		console.log ( date ) ;
+		var d = new Date (date);
+		console.log ( d ) ;
+	}
 
 	mysql.getConnection ( function ( err , mysql_conn ) {
 
@@ -42,9 +48,15 @@ app.get ( '/' , function ( web_req , web_res ) {
 		conn.query ( query , function ( err , res ) {
 
 			console.log ( err ) ;
-			object = { "feedId": feed , "articles": res }
-			web_res.send( object ) ;
+			if ( err )
+				web_res.send ( 500 , 'Internal error ' + err ) ;
+			else
+			{
+				object = { "feedId": feed , "articles": res }
+				web_res.send( object ) ;
+			}
 
+			conn.end();
 		}) ;
 
 	})
