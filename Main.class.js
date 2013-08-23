@@ -95,7 +95,7 @@ Main.prototype.newArticle = function ( url , title , description , pubDate ) {
 
 						if ( res.length == 0 )
 						{
-							article = { url: url , title: title , description : null , date: null } ;
+							article = { url: url , title: title , description : null , date: pubDate } ;
 							self.articles.push ( article ) ;
 						}
 						else
