@@ -34,7 +34,7 @@ app.get ( '/' , function ( web_req , web_res ) {
 	else
 	{
 		date = web_req.query.date ;
-		query = "SELECT DISTINCT url, title, text, created_at FROM articles WHERE `created_at` > '"+date+"' AND `feed` = '"+feed+"' ORDER BY created_at DESC" ;
+		query = "SELECT DISTINCT url, title, text, created_at FROM articles WHERE `created_at` >= '"+date+"' AND `feed` = '"+feed+"' ORDER BY created_at DESC" ;
 	}
 
 	mysql.getConnection ( function ( err , mysql_conn ) {
