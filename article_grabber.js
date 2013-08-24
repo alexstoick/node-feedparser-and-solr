@@ -30,11 +30,13 @@ app.get ( '/' , function ( web_req , web_res ) {
 	feed = web_req.query.feedId ;
 
 	if ( web_req.query.date == null )
-		query = "SELECT DISTINCT url, title, text, created_at FROM articles WHERE `feed` = '"+feed+"' ORDER BY created_at DESC LIMIT 30" ;
+		query = "SELECT DISTINCT url, title, text, UNIX_TIMESTAMP(created_at) as date FROM articles WHERE `feed` = '"+feed+"' ORDER BY created_at DESC LIMIT 30" ;
 	else
 	{
-		date = web_req.query.date ;
-		query = "SELECT DISTINCT url, title, text, created_at FROM articles WHERE `created_at` >= '"+date+"' AND `feed` = '"+feed+"' ORDER BY created_at DESC" ;
+		timestamp = web_req.query.date ;
+		date = new Date ( timestamp * 1000 ) ;
+		date = date.toISOString();
+		query = "SELECT DISTINCT url, title, text, UNIX_TIMESTAMP(created_at) AS date FROM articles WHERE `created_at` >= '"+date+"' AND `feed` = '"+feed+"' ORDER BY created_at DESC" ;
 	}
 
 	mysql.getConnection ( function ( err , mysql_conn ) {
