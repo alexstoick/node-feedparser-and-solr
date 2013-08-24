@@ -28,39 +28,8 @@ var mysql = mysql_lib.createPool ({
 	connectionLimit: 100
 }) ;
 
-app.listen ( 3000 ) ;
+app.listen ( 3500 ) ;
 console.log ( 'Listening on port 3000' ) ;
-
-app.get ( '/' , function ( req , res) {
-
-	if ( req.query.feedId == null )
-	{
-		res.send ( 400 , 'Wrong parameters' ) ;
-	}
-	else
-	{
-		if ( req.query.date == null )
-		{
-			date = new Date() ;
-			date.setHours( date.getHours() - 24 ) ;
-		}
-		else
-			date = req.query.date ;
-
-		var main = new Main_lib ( redis , mysql , solr , new Date ( date ) , req.query.feedId ) ;
-
-		res.header("Content-Type", "application/json; charset=utf-8");
-
-		main.makeRequest ( req.query.url  ) ;
-
-		main.on ( 'finished' , function () {
-			object = { "feedId": req.query.feedId , articles: main.articles } ;
-			console.log ( main.articles.length ) ;
-			console.log ( main.articles[0].date ) ;
-			res.send( object );
-		} ) ;
-	}
-});
 
 app.get ( '/title' , function ( req , res ) {
 

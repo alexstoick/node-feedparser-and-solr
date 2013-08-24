@@ -15,7 +15,7 @@ var mysql = mysql_lib.createPool ({
 date = '2013-08-22 00:00:00';
 feed = 112 ;
 
-app.listen ( 3500 ) ;
+app.listen ( 3000 ) ;
 
 app.get ( '/' , function ( web_req , web_res ) {
 
