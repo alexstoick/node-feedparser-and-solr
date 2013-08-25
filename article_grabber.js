@@ -24,7 +24,7 @@ app.get ( '/' , function ( web_req , web_res ) {
 
 	if ( web_req.query.feedId == null )
 	{
-		res.send ( 400 , 'Wrong parameters' ) ;
+		web_res.send ( 400 , 'Wrong parameters' ) ;
 	}
 
 	feed = web_req.query.feedId ;
