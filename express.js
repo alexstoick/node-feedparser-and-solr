@@ -1,35 +1,10 @@
 var express = require('express') ;
 var app = express() ;
 
-var Main_lib = require ( './Main.class' ) ;
 var Parser_lib = require ( './Parser.class' ) ;
 
-var redis_lib = require ( 'node-redis' ) ;
-var mysql_lib = require ( 'mysql' ) ;
-var Solr_lib = require ( './Solr.class' ) ;
-
-HOST = '37.139.8.146' ;
-
-var solr = new Solr_lib( HOST , 8983 ) ;
-solr.createClient();
-
-
-var redis = redis_lib.createClient ( 6379, HOST ) ;
-redis.on ( 'connect' , function () { console.log ( 'Connected to Redis') ; } ) ;
-redis.on ( 'error', function (err) {
-	console.log('RedisError ' + err);
-});
-
-var mysql = mysql_lib.createPool ({
-	host: HOST ,
-	user : 'root',
-	passsword: 'Wireless123',
-	database: 'stiriAPI',
-	connectionLimit: 100
-}) ;
-
 app.listen ( 3500 ) ;
-console.log ( 'Listening on port 3000' ) ;
+console.log ( 'Listening on port 3500' ) ;
 
 app.get ( '/title' , function ( req , res ) {
 
@@ -42,8 +17,17 @@ app.get ( '/title' , function ( req , res ) {
 		var parser = new Parser_lib ( this ) ;
 
 		parser.on ( 'feedTitle' , function ( title ) {
-			res.send ( title ) ;
+			object = { "title" : title , "error" : null }
+			res.send ( object ) ;
 		} ) ;
+		parser.on( 'errorUrl' , function () {
+			object = { "error" : "Invalid URL" }
+			res.send ( object ) ;
+		})
+		parser.on ( 'errorUrlNotFeed' , function () {
+			object = { "error" : "URL is not a Feed" }
+			res.send ( object ) ;
+		})
 		parser.request ( req.query.url ) ;
 
 	}

@@ -32,11 +32,13 @@ Parser.prototype.request = function ( url )
 
 	request(url)
 		.on('error', function (error) {
-			console.error(error);
+			self.emit ( 'errorUrl' ) ;
+			console.log ( error ) ;
 		})
 		.pipe(new FeedParser())
 		.on('error', function (error) {
-			console.error(error);
+			self.emit ( 'errorUrlNotFeed' ) ;
+			console.log ( error ) ;
 		})
 		.on('meta', function (meta) {
 			console.log ( 'Feed title:  ' + meta.title ) ;
@@ -47,6 +49,7 @@ Parser.prototype.request = function ( url )
 			while (item = stream.read()) {
 				date = ( item.pubDate || item.published || item.date ) ;
 				image = item.image ;
+				console.log ( image ) ;
 				self.count ++ ;
 				self.emit ( 'newArticle' , item.link , item.title , item.description , date ) ;
 				self.start ++ ;
@@ -65,3 +68,4 @@ Parser.prototype.emmitRequestFinished = function ( parent )
 	console.log ( "Duration: "  + (self.end - self.startDate) + " " + self.count ) ;
 	self.emit ( 'endParse' , self.count ) ;
 }
+ 
