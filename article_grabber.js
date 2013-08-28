@@ -1,6 +1,7 @@
 
 var express = require ( 'express' ) ;
 var mysql_lib = require ( 'mysql') ;
+var Parser_lib = require ( './Parser.class' ) ;
 
 var app = express () ;
 
@@ -16,6 +17,7 @@ date = '2013-08-22 00:00:00';
 feed = 112 ;
 
 app.listen ( 3000 ) ;
+console.log ( 'App listening on 3000')
 
 app.get ( '/' , function ( web_req , web_res ) {
 
@@ -60,3 +62,30 @@ app.get ( '/' , function ( web_req , web_res ) {
 
 }) ;
 
+app.get ( '/title' , function ( req , res ) {
+
+	if ( req.query.url == null )
+	{
+		res.send ( 400 , 'Wrong parameters' ) ;
+	}
+	else
+	{
+		var parser = new Parser_lib ( this ) ;
+
+		parser.on ( 'feedTitle' , function ( title ) {
+			object = { "title" : title , "error" : null }
+			res.send ( object ) ;
+		} ) ;
+		parser.on( 'errorUrl' , function () {
+			object = { "error" : "Invalid URL" }
+			res.send ( object ) ;
+		})
+		parser.on ( 'errorUrlNotFeed' , function () {
+			object = { "error" : "URL is not a Feed" }
+			res.send ( object ) ;
+		})
+		parser.request ( req.query.url ) ;
+
+	}
+
+});
