@@ -34,7 +34,8 @@ app.get ( '/' , function ( web_req , web_res ) {
 	else
 	{
 		timestamp = web_req.query.date ;
-		date = new Date ( timestamp ) ;
+		date = new Date ( parseInt(timestamp) ) ;
+		console.log ( timestamp + "	" + date ) ;
 		date = date.toISOString();
 		query = "SELECT DISTINCT url, id , title, text, image , 1000 * UNIX_TIMESTAMP(created_at) AS date FROM articles WHERE `created_at` >= '"+date+"' AND `feed` = '"+feed+"' ORDER BY created_at DESC" ;
 	}
