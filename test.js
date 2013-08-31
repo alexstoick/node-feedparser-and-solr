@@ -728,13 +728,14 @@ feeds = [
 	}
 ]
 
+feeds = [ { "url":"http://www.apple.com/main/rss/hotnews/hotnews.rss" , "id" : 260 } ]
+
 mysql_query = "UPDATE newssources SET image = ? WHERE id = ?"
 
 base_request_url = "http://localhost:3000/title?url=" ;
 
 
 
-//feeds = [{"url":"http://www.gsp.ro/rss.xml","id":112}] ;
 async.each ( feeds , processFeed , function ( err ) {
 	if ( err )
 		console.log ( 'async error ' + err ) ;
@@ -758,11 +759,12 @@ function processFeed ( item , callback )
 					console.log ( 'Cannot get connection ' + err ) ;
 				else
 				{
+					console.log ( image + " " + id ) ;
 					conn.query ( mysql_query , [ image , id ] , function ( err , res ) {
 						if ( err )
 							console.log ( err ) ;
 						else
-							console.log ( res ) ;
+							console.log ( res["message"] ) ;
 						conn.end();
 					}) ;
 				}

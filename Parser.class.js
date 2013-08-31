@@ -41,6 +41,7 @@ Parser.prototype.request = function ( url )
 			console.log ( error ) ;
 		})
 		.on('meta', function (meta) {
+			console.log ( meta ) ;
 			self.emit ( 'feedTitle' , meta.title , meta.favicon || meta.image["url"] ) ;
 		})
 		.on('readable', function() {
@@ -48,7 +49,6 @@ Parser.prototype.request = function ( url )
 			while (item = stream.read()) {
 				date = ( item.pubDate || item.published || item.date ) ;
 				image = item.image ;
-				console.log ( image ) ;
 				self.count ++ ;
 				self.emit ( 'newArticle' , item.link , item.title , item.description , date ) ;
 				self.start ++ ;
