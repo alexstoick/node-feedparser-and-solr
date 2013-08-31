@@ -41,8 +41,7 @@ Parser.prototype.request = function ( url )
 			console.log ( error ) ;
 		})
 		.on('meta', function (meta) {
-			console.log ( 'Feed title:  ' + meta.title ) ;
-			self.emit ( 'feedTitle' , meta.title ) ;
+			self.emit ( 'feedTitle' , meta.title , meta.favicon || meta.image["url"] ) ;
 		})
 		.on('readable', function() {
 			var stream = this, item;

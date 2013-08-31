@@ -72,8 +72,8 @@ app.get ( '/title' , function ( req , res ) {
 	{
 		var parser = new Parser_lib ( this ) ;
 
-		parser.on ( 'feedTitle' , function ( title ) {
-			object = { "title" : title , "error" : null }
+		parser.on ( 'feedTitle' , function ( title , image ) {
+			object = { "title" : title , "image" : image , "error" : null }
 			res.send ( object ) ;
 		} ) ;
 		parser.on( 'errorUrl' , function () {
