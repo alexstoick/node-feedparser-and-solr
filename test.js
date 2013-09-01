@@ -728,13 +728,17 @@ feeds = [
 	}
 ]
 
-feeds = [ { "url":"http://www.apple.com/main/rss/hotnews/hotnews.rss" , "id" : 260 } ]
+//feeds = [ { "url":"http://www.apple.com/main/rss/hotnews/hotnews.rss" , "id" : 260 } ]
 
-mysql_query = "UPDATE newssources SET image = ? WHERE id = ?"
+//feeds = [ {	url: "http://www.gsp.ro/rss.xml", id: 112 } ]
+//feeds = [ {	url: "http://feeds2.feedburner.com/thenextweb" , id: 123 } ]
+
+contor = 0 ;
+mysql_query = "UPDATE newssources SET image = "  ;
 
 base_request_url = "http://localhost:3000/title?url=" ;
 
-
+//console.log ( feeds.length ) ;
 
 async.each ( feeds , processFeed , function ( err ) {
 	if ( err )
@@ -752,25 +756,34 @@ function processFeed ( item , callback )
 	request ( request_url , function ( err , response , body ) {
 		if ( response.statusCode == 200 )
 		{
-			parsed = JSON.parse ( body ) ;
-			image = parsed["image"] ;
+			var parsed = JSON.parse ( body ) ;
+			var image = parsed["image"] ;
 			mysql.getConnection ( function ( err , conn ) {
 				if ( err )
 					console.log ( 'Cannot get connection ' + err ) ;
 				else
 				{
-					console.log ( image + " " + id ) ;
-					conn.query ( mysql_query , [ image , id ] , function ( err , res ) {
-						if ( err )
-							console.log ( err ) ;
-						else
-							console.log ( res["message"] ) ;
-						conn.end();
-					}) ;
+					//console.log ( image + " " + id ) ;
+					if ( image == null )
+					{
+						contor ++ ;
+						//console.log ( contor ) ;
+					}
+					else
+					{
+						//console.log ( image + " " + id ) ;
+						var personal_query = mysql_query + "'" + image + "' WHERE id = " + id ;
+						//console.log ( personal_query ) ;
+						conn.query ( personal_query , function ( err , res ) {
+							if ( err )
+								console.log ( err ) ;
+							// else
+							// 	console.log ( res["message"] ) ;
+							conn.release();
+						}) ;
+					}
 				}
 			}) ;
 		}
 	})
-
-	
 }

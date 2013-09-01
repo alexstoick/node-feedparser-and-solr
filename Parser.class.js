@@ -41,7 +41,7 @@ Parser.prototype.request = function ( url )
 			console.log ( error ) ;
 		})
 		.on('meta', function (meta) {
-			console.log ( meta ) ;
+			//console.log ( meta ) ;
 			self.emit ( 'feedTitle' , meta.title , meta.favicon || meta.image["url"] ) ;
 		})
 		.on('readable', function() {
