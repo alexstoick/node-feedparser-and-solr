@@ -41,8 +41,8 @@ Parser.prototype.request = function ( url )
 			console.log ( error ) ;
 		})
 		.on('meta', function (meta) {
-			//console.log ( meta ) ;
-			self.emit ( 'feedTitle' , meta.title , meta.favicon || meta.image["url"] ) ;
+			console.log ( meta ) ;
+			self.emit ( 'feedTitle' , meta.title ,( "http://www.google.com/s2/favicons?domain=" + meta["link"] ) ) ;
 		})
 		.on('readable', function() {
 			var stream = this, item;
