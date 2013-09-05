@@ -26,10 +26,6 @@ Parser.prototype.request = function ( url )
 {
 	var self = this ;
 
-	self.count = 0 ;
-
-	self.startDate = new Date() ;
-
 	request(url)
 		.on('error', function (error) {
 			self.emit ( 'errorUrl' ) ;
@@ -41,30 +37,8 @@ Parser.prototype.request = function ( url )
 			console.log ( error ) ;
 		})
 		.on('meta', function (meta) {
-			console.log ( meta ) ;
+			//console.log ( meta ) ;
 			self.emit ( 'feedTitle' , meta.title ,( "http://www.google.com/s2/favicons?domain=" + meta["link"] ) ) ;
-		})
-		.on('readable', function() {
-			var stream = this, item;
-			while (item = stream.read()) {
-				date = ( item.pubDate || item.published || item.date ) ;
-				image = item.image ;
-				self.count ++ ;
-				self.emit ( 'newArticle' , item.link , item.title , item.description , date ) ;
-				self.start ++ ;
+		}) ;
 
-			}
-		})
-		.on('end' , function () { self.emmitRequestFinished(self) } );
-
-		return self;
 }
-
-Parser.prototype.emmitRequestFinished = function ( parent )
-{
-	var self = parent ;
-	self.end = new Date() ;
-	console.log ( "Duration: "  + (self.end - self.startDate) + " " + self.count ) ;
-	self.emit ( 'endParse' , self.count ) ;
-}
- 
