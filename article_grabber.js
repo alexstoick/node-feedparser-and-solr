@@ -29,7 +29,7 @@ app.get ( '/' , function ( web_req , web_res ) {
 		web_res.send ( 400 , 'Wrong parameters' ) ;
 	}
 
-	feed = web_req.query.feedId ;
+	var feed = web_req.query.feedId ;
 
 	if ( web_req.query.date == null )
 		query = "SELECT url, id , title , text , image , 1000 * UNIX_TIMESTAMP(created_at) AS date FROM articles WHERE `feed` = '"+feed+"' ORDER BY created_at DESC LIMIT 30 " ;
